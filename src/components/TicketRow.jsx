@@ -48,14 +48,14 @@ export default function TicketRow(props) {
       <div class="col-span-2 text-xs justify-end flex flex-row gap-2">
         <a
           href={`/view/${id}`}
-          class="p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer hover:scale-105"
+          class="p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer hover:scale-95"
           aria-label="Edit ticket"
           title="Edit ticket"
         >
           <div class="size-4" innerHTML={PencilIcon} />
         </a>
         <button
-          class="p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer hover:scale-105"
+          class="p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer hover:scale-95"
           aria-label="Delete ticket"
           title="Delete ticket"
           onClick={() => handleDelete()}

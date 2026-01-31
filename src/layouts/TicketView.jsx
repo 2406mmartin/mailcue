@@ -97,7 +97,7 @@ export default function TicketView(props) {
                   {copied() === false ? (
                     <div class="size-4" innerHTML={CopyIcon} />
                   ) : (
-                    <div class="size-4 text-green-600" innerHTML={CheckIcon} />
+                    <div class="size-4 text-green-500" innerHTML={CheckIcon} />
                   )}
                 </button>
               </div>
@@ -106,14 +106,14 @@ export default function TicketView(props) {
           {/* First message is the customer's initial message */}
           {messages().length > 0 && messages()[0] && (
             <div class="flex flex-col gap-4 px-8 py-6 border-b-2 border-neutral-100 w-full">
-              <div class="font-bold text-md">Initial Message</div>
+              <div class="font-bold text-lg">Initial Message</div>
               <div class="text-neutral-600 text-sm px-4 py-6 bg-neutral-50 rounded-md whitespace-pre-wrap">
                 {messages()[0].body}
               </div>
             </div>
           )}
           <div class="flex flex-col gap-4 px-8 py-6">
-            <div class="font-bold text-md">Conversation</div>
+            <div class="font-bold text-lg">Conversation</div>
             {messages().length <= 1 && (
               <div class="text-xs text-neutral-600 text-center">
                 No replies yet.
@@ -154,7 +154,7 @@ export default function TicketView(props) {
           </div>
           <div class="flex flex-col gap-4 px-8 py-6 border-t-2 border-neutral-100 w-full">
             <div
-              class={`font-bold text-md ${
+              class={`font-bold text-lg ${
                 status() === "CLOSED" ? "hidden" : ""
               }`}
             >
@@ -198,7 +198,7 @@ export default function TicketView(props) {
             </div>
             <textarea
               placeholder="Enter your reply..."
-              class={`text-neutral-600 text-xs p-3 focus:border-neutral-200 focus:bg-neutral-50 outline-none border-2 border-neutral-100 duration-100 transition-colors rounded-md min-h-32 ${
+              class={`text-neutral-600 text-sm p-3 focus:border-neutral-300 focus:bg-neutral-50 outline-none border-2 border-neutral-100 hover:border-neutral-200 duration-100 transition-all rounded-md min-h-32 placeholder:text-neutral-400 ${
                 status() === "CLOSED" ? "hidden" : ""
               }`}
               value={reply()}
@@ -235,7 +235,7 @@ export default function TicketView(props) {
         </div>
         <div class="col-span-1">
           <div class="bg-neutral-50 border-l-2 border-neutral-100 flex flex-col w-full h-full">
-            <div class="px-6 pt-8 pb-4 flex flex-col gap-4">
+            <div class="px-6 py-8 flex flex-col gap-4">
               <div class="font-bold text-lg">Ticket Details</div>
               <ol class="flex flex-col gap-4">
                 <li class="flex flex-col gap-1 w-fit">

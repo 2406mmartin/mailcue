@@ -3,7 +3,7 @@ import TicketRow from './TicketRow.jsx';
 
 const { tickets } = Astro.props;
 ---
-<div class="m-8 flex flex-col w-full gap-2">
+<div class="p-8 flex flex-col w-full gap-2">
   <div class="font-bold text-lg">Tickets</div>
   <div class="rounded-md border-2 border-neutral-100 bg-white">
     <div class="bg-neutral-100 px-6 py-4 grid grid-cols-12 gap-6 text-xs font-semibold uppercase text-neutral-600">
@@ -19,7 +19,7 @@ const { tickets } = Astro.props;
     ))}
 
     {tickets.length === 0 && (
-      <div class="text-sm text-neutral-600 px-7 py-4">No tickets found</div>
+      <div class="text-sm text-neutral-600 p-6">No tickets found</div>
     )}
   </div>
 </div>
