@@ -134,7 +134,9 @@ async function start() {
         const parsed = await simpleParser(message.source);
 
         // Remove email signatures from the message body
+        console.log("Original email text:", parsed.text);
         const cleanedText = removeSignatureAdvanced(parsed.text);
+        console.log("Cleaned text:", cleanedText);
 
         if (parsed.inReplyTo == undefined) {
           const ticket = await createTicket(
@@ -147,30 +149,58 @@ async function start() {
         } else {
           console.log("Reply detected. In-Reply-To:", parsed.inReplyTo);
 
-          // Try to find the ticket by matching the In-Reply-To header
-          // First check messages table
-          const existingMessages = await db
-            .select()
-            .from(messages)
-            .where(eq(messages.email_message_id, parsed.inReplyTo));
-
-          // Then check if it's a reply to the thread anchor
-          const existingTickets = await db
-            .select()
-            .from(tickets)
-            .where(eq(tickets.email_thread_id, parsed.inReplyTo));
-
           let ticketId: number | null = null;
 
-          if (existingMessages.length > 0) {
-            ticketId = existingMessages[0].ticket_id;
-            console.log("Found existing message, ticket ID:", ticketId);
-          } else if (existingTickets.length > 0) {
-            ticketId = existingTickets[0].id;
-            console.log(
-              "Found existing ticket via email_thread_id, ticket ID:",
-              ticketId
-            );
+          // Try to find the ticket by matching the In-Reply-To header
+          if (parsed.inReplyTo) {
+            console.log("Searching for ticket with In-Reply-To:", parsed.inReplyTo);
+
+            // First check messages table
+            const existingMessages = await db
+              .select()
+              .from(messages)
+              .where(eq(messages.email_message_id, parsed.inReplyTo));
+
+            console.log(`Found ${existingMessages.length} messages matching In-Reply-To`);
+
+            // Then check if it's a reply to the thread anchor
+            const existingTickets = await db
+              .select()
+              .from(tickets)
+              .where(eq(tickets.email_thread_id, parsed.inReplyTo));
+
+            console.log(`Found ${existingTickets.length} tickets matching email_thread_id`);
+
+            if (existingMessages.length > 0) {
+              ticketId = existingMessages[0].ticket_id;
+              console.log("Found existing message, ticket ID:", ticketId);
+            } else if (existingTickets.length > 0) {
+              ticketId = existingTickets[0].id;
+              console.log(
+                "Found existing ticket via email_thread_id, ticket ID:",
+                ticketId
+              );
+            }
+          } else {
+            console.log("No In-Reply-To header found");
+          }
+
+          // Fallback: Try to extract ticket ID from subject line if we haven't found a match
+          if (!ticketId) {
+            // Matches patterns like "[Ticket #123]" or "Ticket Opened - #123"
+            const subjectMatch = parsed.subject?.match(/(?:\[Ticket #|#)(\d+)\]/i);
+            if (subjectMatch) {
+              const extractedTicketId = parseInt(subjectMatch[1], 10);
+              const ticketCheck = await db
+                .select()
+                .from(tickets)
+                .where(eq(tickets.id, extractedTicketId));
+
+              if (ticketCheck.length > 0) {
+                ticketId = extractedTicketId;
+                console.log("Found ticket via subject line parsing, ticket ID:", ticketId);
+              }
+            }
           }
 
           if (ticketId) {

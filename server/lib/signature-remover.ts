@@ -63,7 +63,8 @@ export function removeSignature(text: string | undefined): string | undefined {
 
   // Additional cleanup for common patterns that appear after quoted replies
   // Remove everything after "On ... wrote:" pattern (quoted email thread)
-  const quotedReplyPattern = /^On .+ wrote:$/im;
+  // This pattern handles both single-line and multi-line "On ... wrote:" formats
+  const quotedReplyPattern = /^On .+(\n|\r\n)?wrote:\s*$/im;
   const quotedReplyMatch = cleaned.match(quotedReplyPattern);
   if (quotedReplyMatch && quotedReplyMatch.index !== undefined) {
     cleaned = cleaned.substring(0, quotedReplyMatch.index);
@@ -78,6 +79,12 @@ export function removeSignature(text: string | undefined): string | undefined {
   // Trim trailing whitespace and newlines
   cleaned = cleaned.trimEnd();
 
+  // Safety check: if we removed everything, return the original text
+  // This prevents accidentally removing short but valid replies
+  if (!cleaned || cleaned.length === 0) {
+    return text?.trimEnd();
+  }
+
   return cleaned;
 }
 
@@ -90,6 +97,7 @@ export function removeSignatureAdvanced(text: string | undefined): string | unde
 
   // First apply basic signature removal
   let cleaned = removeSignature(text);
+  console.log("After removeSignature:", JSON.stringify(cleaned));
   if (!cleaned) return cleaned;
 
   const lines = cleaned.split('\n');
@@ -150,7 +158,9 @@ export function removeSignatureAdvanced(text: string | undefined): string | unde
   // Remove contact block if found
   if (contactBlockStart !== -1 && contactBlockStart < lines.length - 1) {
     cleaned = lines.slice(0, contactBlockStart).join('\n').trimEnd();
+    console.log("Removed contact block, result:", JSON.stringify(cleaned));
   }
 
+  console.log("Final cleaned result:", JSON.stringify(cleaned));
   return cleaned;
 }

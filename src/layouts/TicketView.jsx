@@ -32,7 +32,7 @@ export default function TicketView(props) {
 
   const handleReplyChange = (e) => setReply(e.target.value);
 
-  const handleSendReply = (newReply, internal) => {
+  const handleSendReply = async (newReply, internal) => {
     if (!newReply.trim()) return;
 
     const newMessage = {
@@ -45,7 +45,7 @@ export default function TicketView(props) {
     setMessages([...messages(), newMessage]);
     scrollToBottom();
 
-    fetch(`/api/ticket/reply`, {
+    const response = await fetch(`/api/ticket/reply`, {
       method: "POST",
       body: JSON.stringify({
         ticketId: ticket?.id,
@@ -53,7 +53,10 @@ export default function TicketView(props) {
         internal: internal,
       }),
     });
-    setReply("");
+
+    if (response.ok) {
+      setReply("");
+    }
   };
 
   const changeStatus = (newStatus) => {
@@ -214,7 +217,6 @@ export default function TicketView(props) {
                     : "bg-black text-white hover:scale-95 hover:cursor-pointer"
                 }`}
                 disabled={reply().trim().length === 0}
-                aria-disabled={reply().trim().length === 0}
                 onClick={() => handleSendReply(reply(), internal())}
               >
                 <div class="size-4" innerHTML={PaperPlaneTilt} />

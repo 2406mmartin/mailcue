@@ -24,10 +24,10 @@ export async function sendEmail(
   subject: string,
   message: string,
   inReplyTo?: string | null,
-  references?: string[]
+  references?: string[],
 ): Promise<{ messageId: string }> {
   const mailOptions: any = {
-    from: `"Novamon Support" <${EMAIL_FROM}>`,
+    from: `"Not a Support Team" <${EMAIL_FROM}>`,
     to: contact,
     subject: subject,
     text: message,
