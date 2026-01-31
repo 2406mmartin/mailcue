@@ -1,0 +1,25 @@
+---
+import TicketRow from './TicketRow.jsx';
+
+const { tickets } = Astro.props;
+---
+<div class="m-8 flex flex-col w-full gap-2">
+  <div class="font-bold text-lg">Tickets</div>
+  <div class="rounded-md border-2 border-neutral-100 bg-white">
+    <div class="bg-neutral-100 px-6 py-4 grid grid-cols-12 gap-6 text-xs font-semibold uppercase text-neutral-600">
+      <div class="col-span-1">ID</div>
+      <div class="col-span-5">Subject</div>
+      <div class="col-span-2">Status</div>
+      <div class="col-span-2">Updated</div>
+      <div class="col-span-2 text-right"></div>
+    </div>
+
+    {tickets.map((ticket: any) => (
+      <TicketRow id={ticket.id} subject={ticket.subject} contact={ticket.contact} status={ticket.status} updated_at={ticket.updated_at} created_at={ticket.created_at} client:load />
+    ))}
+
+    {tickets.length === 0 && (
+      <div class="text-sm text-neutral-600 px-7 py-4">No tickets found</div>
+    )}
+  </div>
+</div>

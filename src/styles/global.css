@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+#activity-log {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+
+/* Chromium, Safari */
+#activity-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+#activity-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#activity-log::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+
+#activity-log::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.18);
+}
