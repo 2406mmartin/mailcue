@@ -35,7 +35,9 @@ pnpm worker
 
 ## Features
 
-- Automatic ticket creation from emails
-- Reply to tickets via web UI (sends as email)
-- Ticket status management (Open, In Progress, Closed)
-- Email signature removal for cleaner ticket threads
+- **Automatic ticket creation** - Incoming emails are automatically converted into tickets
+- **Manual ticket creation** - Create tickets directly from the web UI
+- **Email-based replies** - Reply to tickets via the web interface, responses are sent as emails
+- **Internal notes** - Add internal team notes that aren't sent
+- **Status management** - Track ticket progress (Open, In Progress, Closed)
+- **"Smart" email parsing** - Automatic email signature removal for cleaner ticket threads
