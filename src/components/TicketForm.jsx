@@ -38,7 +38,7 @@ export default function TicketForm() {
 
   return (
     <div class="p-8 flex flex-col w-full gap-2 h-full">
-      <div class="font-bold text-lg">Create a Ticket</div>
+      <div class="text-lg font-semibold text-neutral-900">Create a Ticket</div>
       {submitted() && (
         <div
           class="size-18 animate-spin self-center my-auto"
@@ -46,7 +46,7 @@ export default function TicketForm() {
         />
       )}
       <div
-        class={`rounded-md border-2 border-neutral-100 bg-white flex flex-col gap-4 p-6 flex-1 min-h-0 ${submitted() && "hidden"}`}
+        class={`rounded-md border-2 border-neutral-100  flex flex-col gap-4 p-6 flex-1 min-h-0 ${submitted() && "hidden"}`}
       >
         <TextInput
           label="Subject"
@@ -69,15 +69,15 @@ export default function TicketForm() {
           onInput={setDescription}
         ></TextInput>
         <button
-          class={`w-fit px-3 py-2 self-center rounded-md text-sm flex flex-row justify-center font-bold items-center gap-1.5 transition-all duration-100 ${
+          class={`w-full px-4 py-3 rounded-md text-sm font-medium flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
             isFormValid()
-              ? "bg-black text-white hover:scale-95 hover:cursor-pointer"
+              ? "bg-black text-white hover:bg-neutral-800 cursor-pointer"
               : "bg-neutral-100 text-white cursor-not-allowed"
           }`}
           disabled={!isFormValid()}
           onClick={handleSubmit}
         >
-          <div class="size-4" innerHTML={PlusCircle} />
+          <div class="size-6" innerHTML={PlusCircle} />
           Create Ticket
         </button>
       </div>

@@ -75,21 +75,23 @@ export default function TicketView(props) {
 
   return (
     <div class="flex flex-col h-full w-full">
-      <div class="px-8 py-4 flex flex-row gap-3 h-fit w-full text-neutral-600 text-xs border-b-2 border-neutral-100">
+      <div class="px-8 py-4 flex flex-row gap-3 h-fit w-full text-xs text-neutral-500 border-b-2 border-neutral-100">
         <a href="./" class="hover:underline">
           Tickets
         </a>
         <div>/</div>
-        <div class="font-bold">#{ticket?.id}</div>
+        <div class="font-medium text-neutral-900">#{ticket?.id}</div>
       </div>
       <div class="grid grid-cols-4 h-[calc(100%-56px)] overflow-hidden">
         <div class="col-span-3 flex flex-col overflow-y-auto">
           <div class="flex flex-col gap-8 px-8 py-6 border-b-2 border-neutral-100 w-full">
             <div class="flex flex-col gap-4">
               <div class="flex flex-row gap-4">
-                <div class="font-bold text-xl">{ticket?.subject}</div>
+                <div class="text-xl font-semibold text-neutral-900">
+                  {ticket?.subject}
+                </div>
               </div>
-              <div class="text-neutral-600 text-xs flex flex-row items-center bg-neutral-100 py-1 px-2 w-fit rounded-md">
+              <div class="text-xs text-neutral-500 flex flex-row items-center bg-neutral-100 py-1 px-2 w-fit rounded-md">
                 {ticket?.contact}
                 <button
                   class="ml-1 p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer"
@@ -109,16 +111,20 @@ export default function TicketView(props) {
           {/* First message is the customer's initial message */}
           {messages().length > 0 && messages()[0] && (
             <div class="flex flex-col gap-4 px-8 py-6 border-b-2 border-neutral-100 w-full">
-              <div class="font-bold text-lg">Initial Message</div>
-              <div class="text-neutral-600 text-sm px-4 py-6 bg-neutral-50 rounded-md whitespace-pre-wrap">
+              <div class="text-lg font-semibold text-neutral-900">
+                Initial Message
+              </div>
+              <div class="text-sm text-neutral-700 px-4 py-6 bg-neutral-50 rounded-md whitespace-pre-wrap">
                 {messages()[0].body}
               </div>
             </div>
           )}
           <div class="flex flex-col gap-4 px-8 py-6">
-            <div class="font-bold text-lg">Conversation</div>
+            <div class="text-lg font-semibold text-neutral-900">
+              Conversation
+            </div>
             {messages().length <= 1 && (
-              <div class="text-xs text-neutral-600 text-center">
+              <div class="text-xs text-neutral-500 text-center">
                 No replies yet.
               </div>
             )}
@@ -129,10 +135,10 @@ export default function TicketView(props) {
               {messages()
                 .slice(1)
                 .map((message) => (
-                  <div class="text-xs text-neutral-600 flex flex-row justify-between pl-4">
+                  <div class="text-xs text-neutral-500 flex flex-row justify-between pl-4">
                     <div class="flex flex-col gap-1">
                       <div>
-                        <span class="font-bold">
+                        <span class="font-medium text-neutral-900">
                           {message.author_id || "Customer"}{" "}
                         </span>
                         {message.is_internal
@@ -144,7 +150,7 @@ export default function TicketView(props) {
                           </span>
                         )}
                       </div>
-                      <div class="text-neutral-600 text-xs px-2 py-3 bg-neutral-50 rounded-md whitespace-pre-wrap">
+                      <div class="text-xs text-neutral-700 px-2 py-3 bg-neutral-50 rounded-md whitespace-pre-wrap">
                         {message.body}
                       </div>
                     </div>
@@ -157,7 +163,7 @@ export default function TicketView(props) {
           </div>
           <div class="flex flex-col gap-4 px-8 py-6 border-t-2 border-neutral-100 w-full">
             <div
-              class={`font-bold text-lg ${
+              class={`text-lg font-semibold text-neutral-900 ${
                 status() === "CLOSED" ? "hidden" : ""
               }`}
             >
@@ -169,7 +175,7 @@ export default function TicketView(props) {
               }`}
             >
               <div
-                class={`flex flex-row items-center justify-center gap-2 text-xs font-bold py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
+                class={`flex flex-row items-center justify-center active:scale-95 gap-2 text-xs font-medium py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
                   internal() === true ? "" : "bg-neutral-100"
                 }`}
                 onClick={() => setInternal(false)}
@@ -184,7 +190,7 @@ export default function TicketView(props) {
                 Public
               </div>
               <div
-                class={`flex flex-row items-center justify-center gap-2 text-xs font-bold py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
+                class={`flex flex-row items-center justify-center active:scale-95 gap-2 text-xs font-medium py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
                   internal() === false ? "" : "bg-neutral-100"
                 }`}
                 onClick={() => setInternal(true)}
@@ -201,7 +207,7 @@ export default function TicketView(props) {
             </div>
             <textarea
               placeholder="Enter your reply..."
-              class={`text-neutral-600 text-sm p-3 focus:border-neutral-300 focus:bg-neutral-50 outline-none border-2 border-neutral-100 hover:border-neutral-200 duration-100 transition-all rounded-md min-h-32 placeholder:text-neutral-400 ${
+              class={`text-sm text-neutral-700 p-2 focus:border-neutral-300 focus:bg-neutral-50 outline-none border-2 border-neutral-100 hover:border-neutral-200 duration-100 transition-all rounded-md min-h-32 placeholder:text-neutral-400 ${
                 status() === "CLOSED" ? "hidden" : ""
               }`}
               value={reply()}
@@ -209,12 +215,12 @@ export default function TicketView(props) {
             />
             <div class="flex flex-row self-end gap-4">
               <button
-                class={`w-fit px-3 py-2 rounded-md text-sm flex flex-row justify-center font-bold items-center gap-1.5 transition-all duration-100 ${
+                class={`w-fit px-3 py-2 rounded-md text-sm font-medium flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
                   status() === "CLOSED" ? "hidden" : ""
                 } ${
                   reply().trim().length === 0
                     ? "bg-neutral-100 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:scale-95 hover:cursor-pointer"
+                    : "bg-black text-white hover:bg-neutral-800 hover:cursor-pointer"
                 }`}
                 disabled={reply().trim().length === 0}
                 onClick={() => handleSendReply(reply(), internal())}
@@ -223,8 +229,10 @@ export default function TicketView(props) {
                 Send Reply
               </button>
               <button
-                class={`w-fit px-3 py-2 text-white rounded-md text-sm transition-all duration-100 hover:cursor-pointer hover:scale-95 ${
-                  status() === "OPEN" ? "bg-red-700" : "bg-green-700"
+                class={`w-fit px-3 py-2 text-white rounded-md text-sm transition-all duration-100 hover:cursor-pointer active:scale-95 ${
+                  status() === "OPEN"
+                    ? "bg-red-700 hover:bg-red-600"
+                    : "bg-green-700 hover:bg-green-600"
                 }`}
                 onClick={() =>
                   changeStatus(status() === "OPEN" ? "CLOSED" : "OPEN")
@@ -238,25 +246,27 @@ export default function TicketView(props) {
         <div class="col-span-1">
           <div class="bg-neutral-50 border-l-2 border-neutral-100 flex flex-col w-full h-full">
             <div class="px-6 py-8 flex flex-col gap-4">
-              <div class="font-bold text-lg">Ticket Details</div>
+              <div class="text-lg font-semibold text-neutral-900">
+                Ticket Details
+              </div>
               <ol class="flex flex-col gap-4">
                 <li class="flex flex-col gap-1 w-fit">
-                  <div class="text-xs text-neutral-600">Status</div>
+                  <div class="text-xs text-neutral-500">Status</div>
                   <Status status={status()} />
                 </li>
                 <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-600">Contact</div>
-                  <div class="text-sm">{ticket?.contact}</div>
+                  <div class="text-xs text-neutral-500">Contact</div>
+                  <div class="text-sm text-neutral-700">{ticket?.contact}</div>
                 </li>
                 <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-600">Updated</div>
-                  <div class="text-sm">
+                  <div class="text-xs text-neutral-500">Updated</div>
+                  <div class="text-sm text-neutral-700">
                     {new Date(ticket.updated_at).toLocaleDateString()}
                   </div>
                 </li>
                 <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-600">Created</div>
-                  <div class="text-sm">
+                  <div class="text-xs text-neutral-500">Created</div>
+                  <div class="text-sm text-neutral-700">
                     {new Date(ticket.created_at).toLocaleDateString()}
                   </div>
                 </li>
