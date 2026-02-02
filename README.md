@@ -6,7 +6,7 @@ A lightweight support ticket system that turns emails into manageable tickets.
 
 ## What it does
 
-Monitors an email inbox via IMAP and automatically converts incoming emails into support tickets. Replies to tickets are sent back as emails, creating a seamless email-based support workflow.
+Monitors an email inbox via IMAP and automatically converts incoming emails into support tickets. Replies to tickets are sent back as emails.
 
 ## Tech Stack
 

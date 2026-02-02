@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../layouts/Sidebar.astro';
+import Configuration from "../../layouts/Settings.astro";
+
+export function getStaticPaths() {
+  return [
+    { params: { section: "general" }},
+    { params: { section: "users" }},
+    { params: { section: "inbound-email" }},
+    { params: { section: "outbound-email" }},
+    { params: { section: "email-templates" }},
+    { params: { section: "ticket-defaults" }},
+    { params: { section: "notifications" }},
+  ];
+}
+
+const {section} = Astro.params;
+
+if (!section) {
+    return Astro.redirect('/settings/general');
+}
+---
+
+<Layout title="Mailcue - Settings">
+  <div class="w-full h-screen bg-white flex flex-col">
+    <div class="flex flex-row h-full w-full">
+      <Sidebar />
+      <Configuration section={section} />
+    </div>
+  </div>
+</Layout>

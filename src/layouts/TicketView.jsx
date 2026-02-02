@@ -1,8 +1,9 @@
 import { createSignal, onMount } from "solid-js";
 import Status from "../components/Status.jsx";
-import CopyIcon from "../assets/icons/copy.svg?raw";
-import CheckIcon from "../assets/icons/check.svg?raw";
+import CopyButton from "../components/CopyButton.jsx";
 import PaperPlaneTilt from "../assets/icons/paper-plane-tilt-bold.svg?raw";
+import CheckIcon from "../assets/icons/check.svg?raw";
+import EyeSlashIcon from "../assets/icons/eye-slash.svg?raw";
 
 export default function TicketView(props) {
   const { ticket } = props;
@@ -21,14 +22,6 @@ export default function TicketView(props) {
   onMount(async () => {
     scrollToBottom();
   });
-
-  const handleCopyContact = () => {
-    navigator.clipboard.writeText(ticket.contact);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 1000);
-  };
 
   const handleReplyChange = (e) => setReply(e.target.value);
 
@@ -83,36 +76,22 @@ export default function TicketView(props) {
         <div class="font-medium text-neutral-900">#{ticket?.id}</div>
       </div>
       <div class="grid grid-cols-4 h-[calc(100%-56px)] overflow-hidden">
-        <div class="col-span-3 flex flex-col overflow-y-auto">
+        <div class="col-span-3 flex flex-col overflow-y-auto better-scrollbar">
           <div class="flex flex-col gap-8 px-8 py-6 border-b-2 border-neutral-100 w-full">
             <div class="flex flex-col gap-4">
-              <div class="flex flex-row gap-4">
+              <div class="flex flex-row items-center gap-4">
                 <div class="text-xl font-semibold text-neutral-900">
                   {ticket?.subject}
                 </div>
-              </div>
-              <div class="text-xs text-neutral-500 flex flex-row items-center bg-neutral-100 py-1 px-2 w-fit rounded-md">
-                {ticket?.contact}
-                <button
-                  class="ml-1 p-1 hover:bg-neutral-200 rounded transition-all duration-100 hover:cursor-pointer"
-                  aria-label={copied() ? "Copied" : "Copy contact"}
-                  title={copied() ? "Copied" : "Copy contact"}
-                  onClick={handleCopyContact}
-                >
-                  {copied() === false ? (
-                    <div class="size-4" innerHTML={CopyIcon} />
-                  ) : (
-                    <div class="size-4 text-green-500" innerHTML={CheckIcon} />
-                  )}
-                </button>
+                <Status status={status()} />
               </div>
             </div>
           </div>
-          {/* First message is the customer's initial message */}
+          {/* First message is the initial message */}
           {messages().length > 0 && messages()[0] && (
             <div class="flex flex-col gap-4 px-8 py-6 border-b-2 border-neutral-100 w-full">
               <div class="text-lg font-semibold text-neutral-900">
-                Initial Message
+                Description
               </div>
               <div class="text-sm text-neutral-700 px-4 py-6 bg-neutral-50 rounded-md whitespace-pre-wrap">
                 {messages()[0].body}
@@ -124,44 +103,48 @@ export default function TicketView(props) {
               Conversation
             </div>
             {messages().length <= 1 && (
-              <div class="text-xs text-neutral-500 text-center">
-                No replies yet.
+              <div class="text-xs text-neutral-300 tracking-wide text-center">
+                No activity yet.
               </div>
             )}
             <div
               id="activity-log"
-              class="flex flex-col overflow-y-auto max-h-64 gap-4 border-neutral-100 border-l-2"
+              class="flex flex-col overflow-y-auto max-h-64 gap-4 better-scrollbar border-neutral-100 border-l-2"
             >
               {messages()
                 .slice(1)
                 .map((message) => (
                   <div class="text-xs text-neutral-500 flex flex-row justify-between pl-4">
                     <div class="flex flex-col gap-1">
-                      <div>
-                        <span class="font-medium text-neutral-900">
-                          {message.author_id || "Customer"}{" "}
+                      <div class="flex flex-row gap-1.5 items-center">
+                        <span>
+                          <span class="font-medium text-neutral-900">
+                            {message.author_id || "User"}
+                          </span>{" "}
+                          {message.is_internal ? "replied" : "replied"}
                         </span>
-                        {message.is_internal
-                          ? "added an internal note"
-                          : "replied"}
                         {message.is_internal && (
-                          <span class="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 border-1 border-yellow-200 rounded-full">
+                          <div class="flex flex-row items-center gap-1 px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded text-[0.625rem] font-medium">
+                            <div class="size-3" innerHTML={EyeSlashIcon} />
                             Internal
-                          </span>
+                          </div>
                         )}
                       </div>
                       <div class="text-xs text-neutral-700 px-2 py-3 bg-neutral-50 rounded-md whitespace-pre-wrap">
                         {message.body}
                       </div>
                     </div>
-                    <div>
-                      {new Date(message.created_at).toLocaleDateString()}
+                    <div class="px-3 whitespace-nowrap">
+                      {new Date(message.created_at).toLocaleDateString(
+                        "en-US",
+                        { month: "long", day: "numeric", year: "numeric" },
+                      )}
                     </div>
                   </div>
                 ))}
             </div>
           </div>
-          <div class="flex flex-col gap-4 px-8 py-6 border-t-2 border-neutral-100 w-full">
+          <div class="flex flex-col px-8 py-6 gap-4 border-t-2 border-neutral-100 w-full">
             <div
               class={`text-lg font-semibold text-neutral-900 ${
                 status() === "CLOSED" ? "hidden" : ""
@@ -169,76 +152,66 @@ export default function TicketView(props) {
             >
               Add Reply
             </div>
-            <div
-              class={`flex flex-row gap-4 ${
-                status() === "CLOSED" ? "hidden" : ""
-              }`}
-            >
-              <div
-                class={`flex flex-row items-center justify-center active:scale-95 gap-2 text-xs font-medium py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
-                  internal() === true ? "" : "bg-neutral-100"
-                }`}
-                onClick={() => setInternal(false)}
-              >
-                <div
-                  class={`border-2 p-1 w-fit h-fit rounded-full transition-all duration-100 ${
-                    internal() === true
-                      ? "border-neutral-200"
-                      : "bg-green-500 border-green-200"
-                  }`}
-                ></div>
-                Public
-              </div>
-              <div
-                class={`flex flex-row items-center justify-center active:scale-95 gap-2 text-xs font-medium py-2 px-3 hover:bg-neutral-100 rounded transition-all duration-100 hover:cursor-pointer ${
-                  internal() === false ? "" : "bg-neutral-100"
-                }`}
-                onClick={() => setInternal(true)}
-              >
-                <div
-                  class={`border-2 p-1 w-fit h-fit rounded-full transition-all duration-100 ${
-                    internal() === false
-                      ? "border-neutral-200"
-                      : "bg-green-500 border-green-200"
-                  }`}
-                ></div>
-                Internal
-              </div>
-            </div>
             <textarea
               placeholder="Enter your reply..."
-              class={`text-sm text-neutral-700 p-2 focus:border-neutral-300 focus:bg-neutral-50 outline-none border-2 border-neutral-100 hover:border-neutral-200 duration-100 transition-all rounded-md min-h-32 placeholder:text-neutral-400 ${
+              class={`text-sm text-black p-2 focus:border-neutral-300 focus:bg-neutral-100 outline-none border-2 border-neutral-100 hover:border-neutral-200 duration-100 transition-all rounded-md min-h-32 placeholder:text-neutral-300 ${
                 status() === "CLOSED" ? "hidden" : ""
               }`}
               value={reply()}
               onInput={handleReplyChange}
             />
-            <div class="flex flex-row self-end gap-4">
+            <div
+              class={`flex flex-row justify-between items-center ${status() === "CLOSED" && "hidden"}`}
+            >
               <button
-                class={`w-fit px-3 py-2 rounded-md text-sm font-medium flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
-                  status() === "CLOSED" ? "hidden" : ""
-                } ${
-                  reply().trim().length === 0
-                    ? "bg-neutral-100 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-neutral-800 hover:cursor-pointer"
-                }`}
-                disabled={reply().trim().length === 0}
-                onClick={() => handleSendReply(reply(), internal())}
+                class="flex items-center font-medium gap-2 text-xs text-neutral-600 group hover:cursor-pointer select-none"
+                onClick={() => setInternal(!internal())}
               >
-                <div class="size-4" innerHTML={PaperPlaneTilt} />
-                Send Reply
+                <div
+                  class={`p-1 rounded-sm outline-2 -outline-offset-2 flex items-center justify-center transition-all duration-100 ${
+                    internal()
+                      ? "bg-black outline-black"
+                      : "outline-neutral-100 group-hover:outline-neutral-200"
+                  }`}
+                >
+                  <div
+                    class={`size-4 text-white ${internal() ? "" : "transparent"}`}
+                    innerHTML={CheckIcon}
+                  />
+                </div>
+                Internal
               </button>
+              <div class="flex flex-row gap-4">
+                <button
+                  class={`w-fit py-2 px-4 rounded-md text-sm font-semibold flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
+                    reply().trim().length === 0
+                      ? "bg-neutral-100 text-white cursor-not-allowed"
+                      : "bg-black text-white hover:bg-neutral-800 hover:cursor-pointer"
+                  }`}
+                  disabled={reply().trim().length === 0}
+                  onClick={() => handleSendReply(reply(), internal())}
+                >
+                  <div class="size-4" innerHTML={PaperPlaneTilt} />
+                  Send Reply
+                </button>
+                <button
+                  class="w-fit py-2 px-4 rounded-md text-sm font-semibold bg-black text-white hover:bg-neutral-800 hover:cursor-pointer transition-all duration-100 active:scale-95"
+                  onClick={() =>
+                    changeStatus(status() === "OPEN" ? "CLOSED" : "OPEN")
+                  }
+                >
+                  Close Ticket
+                </button>
+              </div>
+            </div>
+            <div
+              class={`flex flex-row justify-end ${status() === "CLOSED" ? "" : "hidden"}`}
+            >
               <button
-                class={`w-fit px-3 py-2 text-white rounded-md text-sm transition-all duration-100 hover:cursor-pointer active:scale-95 ${
-                  status() === "OPEN"
-                    ? "bg-red-700 hover:bg-red-600"
-                    : "bg-green-700 hover:bg-green-600"
-                }`}
-                onClick={() =>
-                  changeStatus(status() === "OPEN" ? "CLOSED" : "OPEN")
-                }
+                class="w-fit py-2 px-4 rounded-md text-sm font-semibold bg-black text-white hover:bg-neutral-800 hover:cursor-pointer transition-all duration-100 active:scale-95"
+                onClick={() => changeStatus("OPEN")}
               >
-                {status() === "OPEN" ? "Close Ticket" : "Open Ticket"}
+                Open Ticket
               </button>
             </div>
           </div>
@@ -250,24 +223,32 @@ export default function TicketView(props) {
                 Ticket Details
               </div>
               <ol class="flex flex-col gap-4">
-                <li class="flex flex-col gap-1 w-fit">
-                  <div class="text-xs text-neutral-500">Status</div>
-                  <Status status={status()} />
-                </li>
                 <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-500">Contact</div>
-                  <div class="text-sm text-neutral-700">{ticket?.contact}</div>
-                </li>
-                <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-500">Updated</div>
-                  <div class="text-sm text-neutral-700">
-                    {new Date(ticket.updated_at).toLocaleDateString()}
+                  <div class="text-xs font-semibold uppercase text-neutral-600 pt-2 pb-1">
+                    Contact
+                  </div>
+                  <div class="py-1 px-3 text-xs font-medium">
+                    <CopyButton text={ticket?.contact}></CopyButton>
                   </div>
                 </li>
                 <li class="flex flex-col gap-1">
-                  <div class="text-xs text-neutral-500">Created</div>
-                  <div class="text-sm text-neutral-700">
-                    {new Date(ticket.created_at).toLocaleDateString()}
+                  <div class="text-xs font-semibold uppercase text-neutral-600 pt-2 pb-1">
+                    Updated
+                  </div>
+                  <div class="py-1 px-3 text-xs font-medium">
+                    <CopyButton
+                      text={new Date(ticket.updated_at).toLocaleDateString()}
+                    ></CopyButton>
+                  </div>
+                </li>
+                <li class="flex flex-col gap-1">
+                  <div class="text-xs font-semibold uppercase text-neutral-600 pt-2 pb-1">
+                    Created
+                  </div>
+                  <div class="py-1 px-3 text-xs font-medium">
+                    <CopyButton
+                      text={new Date(ticket.created_at).toLocaleDateString()}
+                    ></CopyButton>
                   </div>
                 </li>
               </ol>

@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import TextInput from "./TextInput.jsx";
+import TextInput from "../components/TextInput.jsx";
 import PlusCircle from "../assets/icons/plus-circle-bold.svg?raw";
 import CircleNotch from "../assets/icons/circle-notch.svg?raw";
 
@@ -51,12 +51,14 @@ export default function TicketForm() {
         <TextInput
           label="Subject"
           value={subject()}
+          fill={true}
           onInput={setSubject}
         ></TextInput>
         <TextInput
           label="Contact"
           pattern="^[\w\-.]+@([\w\-]+\.)+[\w\-]{2,4}$"
           errorMessage=" - Invalid email format"
+          fill={true}
           value={contact()}
           onInput={setContact}
           onError={setHasEmailError}
@@ -65,11 +67,12 @@ export default function TicketForm() {
           label="Description"
           textarea={true}
           fill={true}
+          hFill={true}
           value={description()}
           onInput={setDescription}
         ></TextInput>
         <button
-          class={`w-full px-4 py-3 rounded-md text-sm font-medium flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
+          class={`w-full py-2 px-4 rounded-md text-sm font-medium flex flex-row justify-center active:scale-95 items-center gap-1.5 transition-all duration-100 ${
             isFormValid()
               ? "bg-black text-white hover:bg-neutral-800 cursor-pointer"
               : "bg-neutral-100 text-white cursor-not-allowed"

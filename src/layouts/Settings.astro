@@ -1,0 +1,52 @@
+---
+import General from "../layouts/SettingSections/general.jsx";
+import { db } from "../index";
+
+const { section } = Astro.props;
+const settings = await db.query.settings.findFirst();
+---
+
+<div class="p-8 flex flex-col w-full gap-2 h-full">
+      <div class="text-lg font-semibold text-neutral-900">Settings</div>
+      <div class="rounded-md border-2 border-neutral-100 flex flex-row flex-1 min-h-0">
+        <ol class="flex w-fit flex-col text-xs font-medium gap-1 bg-neutral-50 border-r-2 border-neutral-100 p-6">
+          <li class="text-xs font-semibold uppercase text-neutral-600 pt-2 pb-1">
+            Organization
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "general" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            General
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "users" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Users
+          </li>
+
+          <li class="text-xs font-semibold uppercase text-neutral-600 pt-4 pb-1">
+            Email
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "inbound-email" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Inbound Email (IMAP)
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "outbound-email" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Outbound Email (SMTP)
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "email-templates" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Email Templates
+          </li>
+
+          <li class="text-xs font-semibold uppercase text-neutral-600 pt-4 pb-1">
+            Tickets
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "ticket-defaults" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Ticket Defaults
+          </li>
+          <li class={`py-1 px-3 rounded active:scale-95 hover:cursor-pointer transition-all duration-100 ${section == "notifications" ? "bg-black text-white" : "hover:bg-neutral-100"}`}>
+            Notifications
+          </li>
+        </ol>
+        <div class="p-6 flex-1">
+          {section === "general" && (<General client:load settings={settings} />)}
+          {section === "inbound-email" && (<General client:load settings={settings} />)}
+          {section === "outbound-email" && (<General client:load settings={settings} />)}
+        </div>
+      </div>
+    </div>

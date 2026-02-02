@@ -10,6 +10,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
+export const emailServerEnum = pgEnum("email_server", ["SMTP", "IMAP"]);
+
 export const roleEnum = pgEnum("role", ["STAFF", "ADMIN"]);
 
 export const ticketSourceEnum = pgEnum("ticket_source", [
@@ -23,6 +25,34 @@ export const ticketStatusEnum = pgEnum("ticket_status", [
   "IN_PROGRESS",
   "CLOSED",
 ]);
+
+export const settings = pgTable("settings", {
+  id: integer("id").primaryKey().default(1),
+  organization_name: varchar("organization_name").default("Mailcue").notNull(),
+});
+
+export const emailServers = pgTable("email_servers", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  type: emailServerEnum("type").notNull(),
+  host: varchar("host").notNull(),
+  port: integer("port").notNull(),
+  secure: boolean("secure").default(false).notNull(),
+  username: varchar("username").notNull(),
+  password: varchar("password").notNull(),
+  verified: boolean("verified").default(false).notNull(),
+
+  // IMAP specific
+  polling_interval: integer("polling_interval"),
+  folder: varchar("folder"),
+
+  // SMTP specific
+  from_name: varchar("from_name"),
+  reply_to: varchar("reply_to"),
+
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),

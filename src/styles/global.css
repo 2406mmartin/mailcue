@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
-#activity-log {
+.better-scrollbar {
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+  scrollbar-color: oklch(92.2% 0 0) transparent;
 }
 
 /* Chromium, Safari */
-#activity-log::-webkit-scrollbar {
+.better-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
 
-#activity-log::-webkit-scrollbar-track {
+.better-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-#activity-log::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.12);
+.better-scrollbar::-webkit-scrollbar-thumb {
+  background-color: oklch(98.5% 0 0);
   border-radius: 9999px;
 }
 
-#activity-log::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.18);
+.better-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: oklch(98.5% 0 0);
 }
