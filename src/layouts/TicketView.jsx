@@ -38,7 +38,7 @@ export default function TicketView(props) {
     setMessages([...messages(), newMessage]);
     scrollToBottom();
 
-    const response = await fetch(`/api/ticket/reply`, {
+    const response = await fetch(`/api/tickets/${id}/reply`, {
       method: "POST",
       body: JSON.stringify({
         ticketId: ticket?.id,
@@ -56,12 +56,11 @@ export default function TicketView(props) {
     setStatus(newStatus);
     scrollToBottom();
 
-    fetch(`/api/ticket/update`, {
+    fetch(`/api/tickets/${ticket?.id}`, {
       method: "POST",
       body: JSON.stringify({
-        ticketId: ticket?.id,
-        field: "status",
-        value: newStatus,
+        status: newStatus,
+        subject: ticket?.subject,
       }),
     });
   };

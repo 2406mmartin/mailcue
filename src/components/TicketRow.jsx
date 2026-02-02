@@ -10,14 +10,8 @@ export default function TicketRow(props) {
 
   const handleDelete = () => {
     setDeleted(true);
-
-    console.log("made it here");
-
-    fetch(`/api/ticket/delete`, {
-      method: "POST",
-      body: JSON.stringify({
-        ticketId: id,
-      }),
+    fetch(`/api/tickets/${id}`, {
+      method: "DELETE",
     });
   };
 
