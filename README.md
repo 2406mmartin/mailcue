@@ -1,6 +1,6 @@
 # Mailcue
 
-> **Note**: This project is a work in progress and is not close to being finished.
+> **Note**: This project is a work in progress and is not close to being finished. There is also no ETA.
 
 A lightweight support ticket system that turns emails into manageable tickets.
 
